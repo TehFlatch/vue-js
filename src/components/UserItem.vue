@@ -9,14 +9,16 @@
             v-bind:src="user.avatar"
           >
         </v-avatar>
-        <h3>
-          {{user.name}}
-        </h3>
-        <div>
-          <a class="email" v-bind:href="'mailto:'+user.email">{{user.email}}</a>
-        </div>
-        <div>
-          <a class="phone" v-bind:href="'tel:'+user.phone">{{user.phone}}</a>
+        <div class="user-details">
+          <h3>
+            {{user.name}}
+          </h3>
+          <div>
+            <a class="email" target="_blank" v-bind:href="'mailto:'+user.email" v-on:click.stop>{{user.email}}</a>
+          </div>
+          <div>
+            <a class="phone" v-bind:href="'tel:'+user.phone" v-on:click.stop>{{user.phone}}</a>
+          </div>
         </div>
       </v-col>
     </v-row>
@@ -43,7 +45,6 @@ export default {
       margin: 10px;
       padding: 20px;
       transition: background-color 0.2s ease;
-
       .email,
       .phone {
         font-size: 14px;
@@ -63,7 +64,16 @@ export default {
       padding: 20px;
       .v-avatar {
         float:left;
-        margin-right: 20px;
+        // margin-right: 20px;
+      }
+      .user-details {
+        margin-left: 90px;
+        @media (max-width: 767px) {
+          a {
+            font-size: 13px;
+          }
+        }
+        
       }
       &:last-of-type {
         margin-bottom: 0;
