@@ -23,7 +23,7 @@
         <v-btn class="btn btn-list" @click="$store.commit('changeViewMode', 'list')">List</v-btn>
       </div>
     </div>
-    <v-row class="text-center">
+    <v-row>
       <v-col v-if="loading" cols="12">
         <h1>Please wait...</h1>
       </v-col>
@@ -33,12 +33,19 @@
         </div>
       </v-col>
     </v-row>
+    <v-row>
+      <v-pagination
+        v-model="searchParams.page"
+        :length="searchParams.page_count"
+        @input="updatePage"
+      />
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import UserItem from '../components/UserItem.vue';
-import { mapState, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
   mounted: async function() {
@@ -54,6 +61,7 @@ export default {
         sortBy: 'name',
         order: 'asc',
         page: 1,
+        page_count: 9, // Hardcoded page_count to simulate pagination for demo purposes, since mockapi.io doesn't provide page_count.
         limit: 12
       },
       sortingValue: 'name-asc',
@@ -90,6 +98,10 @@ export default {
       this.searchParams.sortBy = splitValue[0];
       this.searchParams.order = splitValue[1];
       this.getUsers(this.searchParams)
+    },
+    updatePage: function(page) {
+      this.searchParams.page = page;
+      this.getUsers(this.searchParams);
     }
   }
 }
@@ -123,7 +135,7 @@ export default {
   .view-modes {
     text-align: right;
     .btn {
-      margin-left: 5px;
+      margin-left: 10px;
     }
   }
   .v-text-field__details {
@@ -132,6 +144,7 @@ export default {
 }
 .user-list {
   &.grid {
+    text-align: center;
     display: grid;
     grid-template-columns: 1fr;
     @media (min-width: 1264px) {
@@ -140,6 +153,9 @@ export default {
     @media (min-width: 768px) and (max-width: 1263px) {
       grid-template-columns: 1fr 1fr 1fr;
     }
+  }
+  &.list {
+    padding: 20px;
   }
 }
 </style>

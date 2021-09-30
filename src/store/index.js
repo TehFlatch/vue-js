@@ -8,6 +8,15 @@ export default new Vuex.Store({
   state: {
     viewMode: 'grid',
     users: [],
+    userData: {
+      name: '',
+      avatar: '',
+      birthdate: '',
+      email: '',
+      phone: '',
+      company: '',
+      creditcard: ''
+    }
   },
   mutations: {
     changeViewMode(state, mode) {
@@ -15,11 +24,13 @@ export default new Vuex.Store({
     },
     updateUsers(state, users) {
       state.users = users;
+    },
+    updateUserData(state, user) {
+      state.userData = user;
     }
   },
   actions: {
     async getUsers({commit}, values) {
-      console.log(values);
       let sortBy = values?.sortBy || 'name';
       let order = values?.order || 'asc';
       let page = values?.page || '1';
@@ -30,8 +41,15 @@ export default new Vuex.Store({
       if (values?.name) url = url.concat(`&name=${values.name}`);
       
       await axios(url).then(res => {
-        // console.log(res.data);
         commit('updateUsers', res.data);
+      });
+    },
+    async getUser({commit}, userId) {
+      
+      let url = `https://614e6c45b4f6d30017b4820f.mockapi.io/users/${userId}`;
+      
+      await axios(url).then(res => {
+        commit('updateUserData', res.data);
       });
     }
   },

@@ -24,12 +24,13 @@
 </template>
 
 <script>
+import router from '../router';
 export default {
   name: 'UserItem',
   props: ['user'],
   methods: {
     showDetails: function(userId) {
-      console.log("Clicked:",userId);
+      router.push({ path: `/user/${userId}`});
     }
   }
 }
@@ -57,6 +58,16 @@ export default {
     }
   }
   .list {
-    
+    .user-card {
+      margin-bottom: 10px;
+      padding: 20px;
+      .v-avatar {
+        float:left;
+        margin-right: 20px;
+      }
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
   }
 </style>
