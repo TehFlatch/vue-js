@@ -12,7 +12,7 @@
           </div>
           <v-card>
             <v-row>
-              <v-col sm="12" md="4" lg="4" class="main-info text-center">
+              <v-col cols="12" sm="12" md="4" lg="4" class="main-info text-center">
                 <v-avatar size="150px">
                   <img
                     v-if="$store.state.userData.avatar"
@@ -24,7 +24,7 @@
                   <span>{{$store.state.userData.name}}</span>
                 </div>
               </v-col>
-              <v-col sm="12" md="8" lg="8" class="additional-info">
+              <v-col cols="12" sm="12" md="8" lg="8" class="additional-info">
                 <div class="additional-info-item email">
                   <v-icon>mdi-email</v-icon>
                   <div>{{$store.state.userData.email}}</div>
