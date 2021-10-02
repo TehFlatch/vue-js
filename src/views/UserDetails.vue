@@ -39,27 +39,27 @@
               <v-col cols="12" sm="12" md="8" lg="8" class="additional-info">
                 <div class="additional-info-item email">
                   <v-icon>mdi-email</v-icon>
-                  <div>{{$store.state.userData.email}}</div>
+                  <div><span><a target="_blank" v-bind:href="'mailto:'+$store.state.userData.email" v-on:click.stop>{{$store.state.userData.email}}</a></span></div>
                 </div>
                 <div class="additional-info-item phone">
                   <v-icon>mdi-phone</v-icon>
-                  <div>{{$store.state.userData.phone}}</div>
+                  <div><span><a v-bind:href="'tel:'+$store.state.userData.phone" v-on:click.stop>{{$store.state.userData.phone}}</a></span></div>
                 </div>
                 <div class="additional-info-item company">
                   <v-icon>mdi-domain</v-icon>
-                  <div>{{$store.state.userData.company}}</div>
+                  <div><span>{{$store.state.userData.company}}</span></div>
                 </div>
                 <div class="additional-info-item birthday">
                   <v-icon>mdi-cake</v-icon>
-                  <div>{{$store.state.userData.birthdate | formatDate}}</div>
+                  <div><span>{{$store.state.userData.birthdate | formatDate}}</span></div>
                 </div>
                 <div class="additional-info-item cc">
                   <v-icon>mdi-credit-card</v-icon>
-                  <div>{{$store.state.userData.creditcard}}</div>
+                  <div><span>{{$store.state.userData.creditcard}}</span></div>
                 </div>
                 <hr/>
                 <div class="additional-info-item bio">
-                  <div>{{$store.state.userData.bio}}</div>
+                  <div><span>{{$store.state.userData.bio}}</span></div>
                 </div>
               </v-col>  
             </v-row>
