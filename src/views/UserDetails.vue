@@ -141,7 +141,7 @@ export default {
   }
   .navigation {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 3fr;
     .v-icon,
     span {
         color: #1976d2;
