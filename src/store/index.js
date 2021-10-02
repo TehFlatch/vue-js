@@ -44,6 +44,7 @@ export default new Vuex.Store({
       state.userData = user;
     },
     updateSearch(state, name) {
+      state.searchParams.page = 1;
       state.searchParams.name = name;
     },
     updateSorting(state, newValues) {
