@@ -107,18 +107,16 @@ export default {
       switch(direction) {
         case 'prev': {
           if (this.userIndex > 0) {
-            console.log(this.$store.state.users);
             let prevId = this.$store.state.users[this.userIndex - 1].id;
-            console.log(prevId);
             router.replace({ path: `/user/${prevId}`});
           }
         }
         break;
         case 'next': {
-          console.log(this.$store.state.users);
-          let nextId = this.$store.state.users[this.userIndex + 1].id;
-          console.log(nextId);
-          router.push({ path: `/user/${nextId}`});
+          if (this.userIndex < this.$store.state.users.length - 1) {
+            let nextId = this.$store.state.users[this.userIndex + 1].id;
+            router.push({ path: `/user/${nextId}`});
+          }
         }
         break;
       }

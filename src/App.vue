@@ -12,7 +12,9 @@
     </v-app-bar>
 
     <v-main>
-      <router-view :key="$route.fullPath"/>
+      <transition name="fade" mode="out-in">
+        <router-view :key="$route.fullPath"/>
+      </transition>
     </v-main>
   </v-app>
 </template>
@@ -34,5 +36,17 @@ h1 {
 }
 .v-application {
   background: #f9f9f9 !important;
+}
+.fade-leave-active,
+.fade-enter-active {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+.fade-enter-to {
+  opacity: 1;
 }
 </style>
