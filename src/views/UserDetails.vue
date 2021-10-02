@@ -72,10 +72,8 @@
 
 <script>
 import { mapActions } from 'vuex';
-// import Vue from 'vue';
 import moment from 'moment';
 import router from '../router';
-// Vue.forceUpdate();
 
 export default {
   mounted: async function() {

@@ -150,12 +150,6 @@ export default {
       min-width: 250px;
     }
   }
-  // .view-modes {
-  //   text-align: right;
-  //   .btn {
-  //     margin-left: 10px;
-  //   }
-  // }
   .v-text-field__details {
     display: none !important;
   }
