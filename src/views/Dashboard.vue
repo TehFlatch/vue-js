@@ -3,10 +3,16 @@
     <div class="list-header">
       <div class="search-group">
         <div class="search-input">
-          <v-text-field @keyup="updateSearch"
+          <v-text-field
+            @keyup="updateSearch"
+            @keyup.enter="doSearch"
+            @click:append="doSearch"
+            @click:clear="clearSearch"
             v-bind:value="searchParams.name"
             label="Filter by name"
             outlined
+            clearable
+            append-icon="mdi-magnify"
           ></v-text-field>
         </div>
         <div class="sorting-input">
@@ -86,12 +92,20 @@ export default {
       }
       this.loading = false;
     },
+    doSearch: function() {
+      this.updateUsers(true);
+    },
+    clearSearch: function() {
+      this.$store.commit('updateSearch', '');
+      this.doSearch();
+    },
     updateSearch: function(event) {
+      console.log(event.target.value);
       this.$store.commit('updateSearch', event.target.value);
-      if (event.key == "Enter") {
-        this.updateUsers(true);
-      }
-      console.log(event);
+      // if (event.key == "Enter") {
+      //   this.updateUsers(true);
+      // }
+      // console.log(event);
     },
     updateSorting: function(value) {
       const splitValue = value.split('-');
