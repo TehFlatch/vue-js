@@ -40,6 +40,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+  .v-avatar {
+    box-shadow: #00000033 3px 5px 9px 0px, #82b1ffbf -3px -3px 7px 0px;
+    margin-bottom: 20px;
+  }
   .grid {
     .user-card {
       margin: 10px;
@@ -53,10 +57,6 @@ export default {
         background-color: #1976d233;
       }
     }
-    .v-avatar {
-      box-shadow: #000000d4 0px 1px 9px 0px;
-      margin-bottom: 20px;
-    }
   }
   .list {
     .user-card {
@@ -64,7 +64,6 @@ export default {
       padding: 20px;
       .v-avatar {
         float:left;
-        // margin-right: 20px;
       }
       .user-details {
         margin-left: 90px;

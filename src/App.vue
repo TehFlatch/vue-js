@@ -12,7 +12,7 @@
     </v-app-bar>
 
     <v-main>
-      <router-view/>
+      <router-view :key="$route.fullPath"/>
     </v-main>
   </v-app>
 </template>
@@ -31,5 +31,8 @@ export default {
 <style lang="scss">
 h1 {
   text-align: center;
+}
+.v-application {
+  background: #f9f9f9 !important;
 }
 </style>

@@ -16,7 +16,22 @@ export default new Vuex.Store({
       phone: '',
       company: '',
       creditcard: ''
-    }
+    },
+    searchParams: {
+      name: '',
+      sortBy: 'name',
+      order: 'asc',
+      page: 1,
+      page_count: 9, // Hardcoded page_count to simulate pagination for demo purposes, since mockapi.io doesn't provide page_count.
+      limit: 12
+    },
+    sortingValue: 'name-asc',
+    sortingOptions: [
+      {text: 'Name, ascending', value: 'name-asc'},
+      {text: 'Name, descending', value: 'name-desc'},
+      {text: 'ID, ascending', value: 'id-asc'},
+      {text: 'ID, descending', value: 'id-desc'},
+    ]
   },
   mutations: {
     changeViewMode(state, mode) {
@@ -27,6 +42,13 @@ export default new Vuex.Store({
     },
     updateUserData(state, user) {
       state.userData = user;
+    },
+    updateSearch(state, name) {
+      state.searchParams.name = name;
+    },
+    updateSorting(state, newValues) {
+      state.searchParams = newValues.newSort;
+      state.sortingValue = newValues.newSortingValue;
     }
   },
   actions: {

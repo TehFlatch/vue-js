@@ -4,6 +4,7 @@
       <div class="search-group">
         <div class="search-input">
           <v-text-field @keyup="updateSearch"
+            v-bind:value="searchParams.name"
             label="Filter by name"
             outlined
           ></v-text-field>
@@ -11,16 +12,20 @@
         <div class="sorting-input">
           <v-select
             :items="sortingOptions"
+            :value="sortingValue"
+            @change="updateSorting"
             label="Sort by"
             outlined
-            v-bind:value="sortingValue"
-            @change="updateSorting"
           ></v-select>
         </div>
       </div>
       <div class="view-modes">
-        <v-btn class="btn btn-grid" @click="$store.commit('changeViewMode', 'grid')">Grid</v-btn>
-        <v-btn class="btn btn-list" @click="$store.commit('changeViewMode', 'list')">List</v-btn>
+        <v-tabs
+        @change="changeViewMode"
+        :background-color="'transparent'">
+          <v-tab>Grid</v-tab>
+          <v-tab>List</v-tab>
+        </v-tabs>
       </div>
     </div>
     <v-row>
@@ -28,8 +33,8 @@
         <h1>Please wait...</h1>
       </v-col>
       <v-col v-if="!loading" cols="12">
-        <div v-bind:class="$store.state.viewMode" class="user-list">
-          <user-item v-for="user in $store.state.users" :key="user.id" :user="user" />
+        <div v-bind:class="viewMode" class="user-list">
+          <user-item v-for="user in users" :key="user.id" :user="user" />
         </div>
       </v-col>
     </v-row>
@@ -45,63 +50,64 @@
 
 <script>
 import UserItem from '../components/UserItem.vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 export default {
-  mounted: async function() {
-    await this.initUsers();
+  mounted: function() {
+    this.initUsers();
   },
   components: { UserItem },
   name: 'Dashboard',
   data: ()=> {
     return {
       loading: false,
-      searchParams: {
-        name: '',
-        sortBy: 'name',
-        order: 'asc',
-        page: 1,
-        page_count: 9, // Hardcoded page_count to simulate pagination for demo purposes, since mockapi.io doesn't provide page_count.
-        limit: 12
-      },
-      sortingValue: 'name-asc',
-      sortingOptions: [
-        {text: 'Name, ascending', value: 'name-asc'},
-        {text: 'Name, descending', value: 'name-desc'},
-        {text: 'ID, ascending', value: 'id-asc'},
-        {text: 'ID, descending', value: 'id-desc'},
-      ]
     }
+  },
+  computed: {
+    ...mapState(['viewMode', 'users', 'searchParams', 'sortingValue', 'sortingOptions'])
   },
   props: {},
   methods: {
     ...mapActions({
       getUsers: 'getUsers'
     }),
-    initUsers: async function() {
+    initUsers: function() {
       if (!this.$store.state.users.length) {
-        this.loading = true;
-        await this.getUsers();
-        this.loading = false;
+        this.updateUsers(false);
       }
     },
-    updateSearch: function(event) {
-      this.searchParams.name = event.target.value;
-      if (event.key == "Enter") {
-        this.getUsers(this.searchParams);
-        console.log(event);
+    updateUsers: async function(useSearchParams) {
+      this.loading = true;
+      if (useSearchParams) {
+        await this.getUsers(this.searchParams);
+      } else {
+        await this.getUsers();
       }
+      this.loading = false;
+    },
+    updateSearch: function(event) {
+      this.$store.commit('updateSearch', event.target.value);
+      if (event.key == "Enter") {
+        this.updateUsers(true);
+      }
+      console.log(event);
     },
     updateSorting: function(value) {
       const splitValue = value.split('-');
-      this.searchParams.sortingValue = value;
-      this.searchParams.sortBy = splitValue[0];
-      this.searchParams.order = splitValue[1];
-      this.getUsers(this.searchParams)
+      let newSort = {...this.searchParams};
+      newSort.page = 1;
+      newSort.sortBy = splitValue[0];
+      newSort.order = splitValue[1];
+      this.$store.commit('updateSorting', { newSort: newSort, newSortingValue: value });
+      this.updateUsers(true);
     },
     updatePage: function(page) {
       this.searchParams.page = page;
-      this.getUsers(this.searchParams);
+      this.updateUsers(true);
+    },
+    changeViewMode: function(mode) {
+      let viewMode = mode == 0 ? 'grid' : 'list';
+      this.$store.commit('changeViewMode', viewMode);
     }
   }
 }
@@ -109,6 +115,15 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
+.view-modes {
+  .v-slide-group__content {
+    justify-content: flex-end;
+  }
+  .v-tab {
+    width: 50%;
+    max-width: 50%;
+  }
+}
 .list-header {
   display: grid;
   grid-template-columns: 1fr;
@@ -131,13 +146,16 @@ export default {
         margin-right: 5px;
       }
     }
-  }
-  .view-modes {
-    text-align: right;
-    .btn {
-      margin-left: 10px;
+    .sorting-input {
+      min-width: 250px;
     }
   }
+  // .view-modes {
+  //   text-align: right;
+  //   .btn {
+  //     margin-left: 10px;
+  //   }
+  // }
   .v-text-field__details {
     display: none !important;
   }

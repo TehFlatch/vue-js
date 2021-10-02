@@ -6,9 +6,21 @@
       </v-col>
       <v-col v-if="!loading && $store.state.userData" cols="12">
         <div class="user-details">
-          <div v-on:click="goBack" class="go-back">
-            <v-icon class="go-back-icon">mdi-arrow-left</v-icon>
-            <span class="go-back-text">Go Back</span>
+          <div class="navigation">
+            <div v-on:click="goBack" class="go-back">
+              <v-icon class="go-back-icon">mdi-arrow-left</v-icon>
+              <span class="go-back-text">Go Back</span>
+            </div>
+            <div v-if="$store.state.users.length" class="user-navigation">
+              <div v-on:click="changeUser('prev')" v-bind:class="{disabled:userIndex <= 0}" class="previous">
+                <v-icon class="previous-icon">mdi-arrow-left</v-icon>
+                <span class="previous-text">Previous User</span>
+              </div>
+              <div v-on:click="changeUser('next')" v-bind:class="{disabled:userIndex >= $store.state.users.length - 1}" class="next">
+                <span class="next-text">Next User</span>
+                <v-icon class="next-icon">mdi-arrow-right</v-icon>
+              </div>
+            </div>
           </div>
           <v-card>
             <v-row>
@@ -60,18 +72,22 @@
 
 <script>
 import { mapActions } from 'vuex';
+// import Vue from 'vue';
 import moment from 'moment';
 import router from '../router';
+// Vue.forceUpdate();
 
 export default {
   mounted: async function() {
     await this.initUser(this.$route.params.userId);
+    this.userIndex = this.$store.state.users.findIndex(user => user.id == this.$route.params.userId);
   },
   components: {  },
   name: 'UserDetails',
   data: ()=> {
     return {
       loading: false,
+      userIndex: 0,
     }
   },
   props: {},
@@ -85,7 +101,27 @@ export default {
       this.loading = false;
     },
     goBack: function() {
-      router.go(-1);
+      router.push('/');
+    },
+    changeUser: function(direction) {
+      switch(direction) {
+        case 'prev': {
+          if (this.userIndex > 0) {
+            console.log(this.$store.state.users);
+            let prevId = this.$store.state.users[this.userIndex - 1].id;
+            console.log(prevId);
+            router.replace({ path: `/user/${prevId}`});
+          }
+        }
+        break;
+        case 'next': {
+          console.log(this.$store.state.users);
+          let nextId = this.$store.state.users[this.userIndex + 1].id;
+          console.log(nextId);
+          router.push({ path: `/user/${nextId}`});
+        }
+        break;
+      }
     }
   },
   filters: {
@@ -101,18 +137,50 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
 .user-details{
-  .go-back {
-    .go-back-icon {
-      color: #1976d2;
+  .v-avatar {
+    box-shadow: #00000033 3px 5px 9px 0px, #82b1ffbf -3px -3px 7px 0px;
+    margin-bottom: 20px;
+  }
+  .navigation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    .v-icon,
+    span {
+        color: #1976d2;
     }
-    .go-back-text {
+    span {
       position: relative;
       top: 2px;
-      left: 8px;
-      color: #1976d2;
     }
-    &:hover {
-      cursor: pointer;
+    div {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .go-back {
+      .span {
+        left: 8px;
+      }
+      
+    }
+    .user-navigation {
+      text-align: right;
+      display: flex;
+      justify-content: flex-end;
+      .disabled {
+        opacity: 0.5;
+      }
+      .next {
+        margin-left: 30px;
+        span {
+          right: 8px;
+        }
+      }
+      .previous {
+        span {
+          left: 8px;
+        }
+      }
     }
   }
   .v-card {
