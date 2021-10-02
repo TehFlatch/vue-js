@@ -21,6 +21,7 @@
       </div>
       <div class="view-modes">
         <v-tabs
+        :value="viewMode == 'grid' ? 0 : 1"
         @change="changeViewMode"
         :background-color="'transparent'">
           <v-tab>Grid</v-tab>
