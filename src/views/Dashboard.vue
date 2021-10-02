@@ -39,7 +39,10 @@
       <v-col v-if="loading" cols="12">
         <h1>Please wait...</h1>
       </v-col>
-      <v-col v-if="!loading" cols="12">
+      <v-col v-if="!loading && users.length == 0" cols="12">
+        <h1 class="no-users">No users have been found with the search criteria</h1>
+      </v-col>
+      <v-col v-if="!loading && users.length > 0" cols="12">
         <div v-bind:class="viewMode" class="user-list">
           <user-item v-for="user in users" :key="user.id" :user="user" />
         </div>
@@ -102,10 +105,6 @@ export default {
     updateSearch: function(event) {
       console.log(event.target.value);
       this.$store.commit('updateSearch', event.target.value);
-      // if (event.key == "Enter") {
-      //   this.updateUsers(true);
-      // }
-      // console.log(event);
     },
     updateSorting: function(value) {
       const splitValue = value.split('-');
@@ -130,6 +129,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
+.no-users {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
 .view-modes {
   .v-slide-group__content {
     justify-content: flex-end;
